@@ -1,0 +1,123 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:HW9;assembly=HW9"
+        xmlns:interfaces="clr-namespace:Interfaces;assembly=Interfaces"
+        Title="HW9">
+    <Window.DataContext>
+    <local:MainViewModel />
+  </Window.DataContext>
+  <Window.Styles>
+    <Style Selector="TextBlock.h1">
+      <Setter Property="FontSize" Value="24" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style Selector="TextBox">
+      <Setter Property="Margin" Value="5" />
+    </Style>
+    <Style Selector="TextBlock">
+      <Setter Property="Margin" Value="5" />
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="Margin" Value="5" />
+    </Style>
+  </Window.Styles>
+  <DockPanel>
+    <TextBlock Text="JSON Book Reader"
+               Classes="h1"
+               DockPanel.Dock="Top" />
+    <TabControl>
+      <TabItem Header="Master/Details">
+        <Grid RowDefinitions="Auto,Auto,*">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="120" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition MinWidth="80" />
+          </Grid.ColumnDefinitions>
+          <DockPanel Grid.ColumnSpan="3"
+                     Grid.Row="1">
+            <TextBlock Text="Path to JSON file"
+                       VerticalAlignment="Center"
+                       DockPanel.Dock="Left" />
+
+
+            <Button Content="Load"
+                    DockPanel.Dock="Right"
+                    Command="{Binding LoadBookJSON}" />
+            <Button Content="..."
+                    MinWidth="60"
+                    DockPanel.Dock="Right"
+                    Command="{Binding FindFile}" />
+
+            <TextBox Text="{Binding JsonPath}"
+                     MinWidth="100"/>
+          </DockPanel>
+
+          <TextBlock Grid.Row="0"
+                     Grid.ColumnSpan="3"
+                     HorizontalAlignment="Right"
+                     Text="{Binding Output}" />
+
+          <ListBox Grid.Row="2"
+                   Items="{Binding Books}"
+                   SelectedItem="{Binding SelectedBook}"
+                   Margin="5">
+            <ListBox.DataTemplates>
+              <DataTemplate DataType="interfaces:Book">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="{Binding Title}" />
+                  <TextBlock Text="{Binding Pages}" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.DataTemplates>
+          </ListBox>
+
+          <Border BorderThickness="2"
+                  BorderBrush="Black"
+                  Margin="5"
+                  CornerRadius="5"
+                  Grid.Row="2"
+                  Grid.Column="1"
+                  Grid.ColumnSpan="2">
+            <Grid DataContext="{Binding SelectedBook}"
+                  RowDefinitions="Auto,Auto,Auto,Auto,*"
+                  ColumnDefinitions="Auto,*">
+              <TextBlock Text="Book Title" />
+              <TextBlock Grid.Column="1"
+                         Text="{Binding Title}" />
+
+              <TextBlock Text="Author"
+                         Grid.Row="1"/>
+              <TextBlock Grid.Column="1"
+                         Grid.Row="1"
+                         Text="{Binding Author}" />
+
+              <TextBlock Text="Pages"
+                         Grid.Row="2"/>
+              <TextBlock Grid.Column="1"
+                         Grid.Row="2"
+                         Text="{Binding Pages}" />
+
+              <TextBlock Text="Chapters"
+                         Grid.Row="3"/>
+              <TextBlock Grid.Column="1"
+                         Grid.Row="3"
+                         Text="{Binding Chapters}" />
+
+              <TextBlock Text="Words"
+                         Grid.Row="4"/>
+              <TextBlock Grid.Column="1"
+                         Grid.Row="4"
+                         Text="{Binding Words}" />
+            </Grid>
+          </Border>
+        </Grid>
+      </TabItem>
+      <TabItem Header="Tab 2">
+
+      </TabItem>
+      <TabItem Header="Tab 3">
+
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</Window>

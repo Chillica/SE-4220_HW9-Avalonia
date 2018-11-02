@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>SE_4220_HW9_Avalonia</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Book.cs~RF4a6ac62b.TMP" />
+  </ItemGroup>
 
 </Project>
