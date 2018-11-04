@@ -8,16 +8,22 @@ using System.Text;
 
 namespace HW9
 {
-    class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
+        private readonly IDataService data;
+        private readonly IBookSearchService bookSearch;
+        public ObservableCollection<Book> Books { get; private set; }
+        public ObservableCollection<SearchResult> RelaventBooks { get; private set; }
 
-        public MainViewModel() : this(new DefaultDataService())
+        public MainViewModel() : this(new DefaultDataService(), new DefaultBookSearchService())
         { }
 
-        public MainViewModel(IDataService data)
+        public MainViewModel(IDataService data, IBookSearchService bookSearch)
         {
             this.data = data ?? throw new ArgumentNullException(nameof(data));
+            this.bookSearch = bookSearch ?? throw new ArgumentNullException(nameof(bookSearch));
             Books = new ObservableCollection<Book>();
+            
         }
 
         private string jsonPath;
@@ -32,6 +38,17 @@ namespace HW9
             }
         }
 
+        private Book selectedBook;
+        public Book SelectedBook
+        {
+            get => selectedBook;
+            set
+            {
+                selectedBook = value;
+                OnPropertyChanged(nameof(SelectedBook));
+            }
+        }
+
         private string output;
         public string Output
         {
@@ -43,7 +60,80 @@ namespace HW9
             }
         }
 
-        private readonly IDataService data;
+        private bool isBusy;
+        public bool IsBusy
+        {
+            get => isBusy;
+            set
+            {
+                isBusy = value;
+                OnPropertyChanged(nameof(IsBusy));
+                LoadBookJSON.RaiseCanExecuteChanged();
+                FindFile.RaiseCanExecuteChanged();
+            }
+        }
+
+        private string userSearch;
+        public string UserSearch
+        {
+            get => userSearch;
+            set
+            {
+                userSearch = value;
+                OnPropertyChanged(nameof(UserSearch));
+            }
+        }
+
+        private SearchResult searchResult;
+        public SearchResult SearchResult
+        {
+            get => searchResult;
+            set
+            {
+                searchResult = value;
+                OnPropertyChanged(nameof(SearchResult));
+                OnPropertyChanged(nameof(RelaventBooks));
+            }
+        }
+
+        private SimpleCommand getGoodreads;
+        public SimpleCommand GetGoodreads => getGoodreads ?? (getGoodreads = new SimpleCommand(async () =>
+        {
+            SearchResult result = new SearchResult();
+
+            var res = bookSearch.SearchByTitle(UserSearch);
+            var val = res.Result;
+            if (val != null)
+            {
+                RelaventBooks = new ObservableCollection<SearchResult>();
+                foreach (var p in val.Authors)
+                {
+                    result.Author += p.Name + ", ";
+                }
+                result.Title = val.Title;
+                result.Image = val.SmallImageUrl;
+                foreach (var b in val.SimilarBooks)
+                {
+                    SearchResult otherBook = new SearchResult();
+                    foreach (var o in b.Authors)
+                    {
+                        otherBook.Author += o.Name + ", ";
+                    }
+                    otherBook.Title = b.Title;
+                    otherBook.Image = b.SmallImageUrl;
+                    RelaventBooks.Add(otherBook);
+                }
+            }
+            else
+            {
+                result.Title = "Not able to get info";
+                result.Author = "Not Able to get info";
+                result.Image = "Not Able to get info";
+            }
+            SearchResult = result;
+        }));
+
+
         private SimpleCommand loadBookJSON;
         public SimpleCommand LoadBookJSON => loadBookJSON ?? (loadBookJSON = new SimpleCommand(
         () => !IsBusy && data.FileExists(JsonPath), //can execute
@@ -66,33 +156,7 @@ namespace HW9
                 LoadBookJSON.RaiseCanExecuteChanged();
             }));
 
-        private bool isBusy;
-        public bool IsBusy
-        {
-            get => isBusy;
-            set
-            {
-                isBusy = value;
-                OnPropertyChanged(nameof(IsBusy));
-                LoadBookJSON.RaiseCanExecuteChanged();
-                FindFile.RaiseCanExecuteChanged();
-            }
-        }
-
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public ObservableCollection<Book> Books { get; private set; }
-
-        private Book selectedBook;
-        public Book SelectedBook
-        {
-            get => selectedBook;
-            set
-            {
-                selectedBook = value;
-                OnPropertyChanged(nameof(SelectedBook));
-            }
-        }
     }
 }

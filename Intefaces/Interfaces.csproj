@@ -8,4 +8,8 @@
     <None Remove="Book.cs~RF4a6ac62b.TMP" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Goodreads" Version="1.0.1" />
+  </ItemGroup>
+
 </Project>

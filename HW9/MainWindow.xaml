@@ -3,7 +3,7 @@
         xmlns:local="clr-namespace:HW9;assembly=HW9"
         xmlns:interfaces="clr-namespace:Interfaces;assembly=Interfaces"
         Title="HW9">
-    <Window.DataContext>
+  <Window.DataContext>
     <local:MainViewModel />
   </Window.DataContext>
   <Window.Styles>
@@ -22,11 +22,11 @@
     </Style>
   </Window.Styles>
   <DockPanel>
-    <TextBlock Text="JSON Book Reader"
+    <TextBlock Text="Jacob's Project"
                Classes="h1"
                DockPanel.Dock="Top" />
     <TabControl>
-      <TabItem Header="Master/Details">
+      <TabItem Header="JSON Reader">
         <Grid RowDefinitions="Auto,Auto,*">
           <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="120" />
@@ -38,7 +38,6 @@
             <TextBlock Text="Path to JSON file"
                        VerticalAlignment="Center"
                        DockPanel.Dock="Left" />
-
 
             <Button Content="Load"
                     DockPanel.Dock="Right"
@@ -112,12 +111,75 @@
           </Border>
         </Grid>
       </TabItem>
-      <TabItem Header="Tab 2">
+            <TabItem Header="Goodreads API">
+                <Grid RowDefinitions="Auto,Auto,*">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="120" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition MinWidth="80" />
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Grid.ColumnSpan="3"
+                     Grid.Row="1">
+                        <TextBlock Text="Book Search by Title: "
+                       VerticalAlignment="Center"
+                       DockPanel.Dock="Left" />
 
-      </TabItem>
-      <TabItem Header="Tab 3">
+                        <Button Content="Seek"
+                                Command="{Binding GetGoodreads}"
+                    DockPanel.Dock="Right" />
 
-      </TabItem>
-    </TabControl>
+                        <TextBox Text="{Binding UserSearch}"
+                                 MinWidth="100"/>
+                    </DockPanel>
+
+                    <Border BorderThickness="2"
+                  BorderBrush="Black"
+                  Margin="5"
+                  CornerRadius="5"
+                  Grid.Row="2">
+                        <Grid DataContext="{Binding SearchResult}"
+                  RowDefinitions="Auto,Auto,Auto,Auto,*"
+                  ColumnDefinitions="Auto,*">
+                            <TextBlock Text="Book Title" />
+                            <TextBlock Grid.Column="1"
+                         Text="{Binding Title}" />
+
+                            <TextBlock Text="Author"
+                         Grid.Row="1"/>
+                            <TextBlock Grid.Column="1"
+                         Grid.Row="1"
+                         Text="{Binding Author}" />
+
+                            <TextBlock Text="Book Image URL"
+                         Grid.Row="2"/>
+                            <TextBlock Grid.Column="1"
+                         Grid.Row="2"
+                         Text="{Binding Image}" />
+                        </Grid>
+                    </Border>
+                    
+                    <ListBox Grid.Row="2"
+                             Grid.Column="1"
+                             Grid.ColumnSpan="2"
+                             Items="{Binding RelaventBooks}"
+                             Margin="5">
+                        <ListBox.DataTemplates>
+                            <DataTemplate DataType="interfaces:SearchResult">
+                                <Border BorderThickness="2"
+                                        BorderBrush="Black"
+                                        Margin="5,2,5,2"
+                                        CornerRadius="5">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Title}" />
+                                        <TextBlock Text="{Binding Author}" />
+                                        <TextBlock Text="{Binding Image}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.DataTemplates>
+                    </ListBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
   </DockPanel>
 </Window>
