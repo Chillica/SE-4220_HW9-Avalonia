@@ -126,6 +126,7 @@ namespace HW9
             }
             else
             {
+                RelaventBooks = new ObservableCollection<SearchResult>();
                 result.Title = "Not able to get info";
                 result.Author = "Not Able to get info";
                 result.Image = "Not Able to get info";
