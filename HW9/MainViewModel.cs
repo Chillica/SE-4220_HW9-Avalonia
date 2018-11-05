@@ -13,7 +13,6 @@ namespace HW9
         private readonly IDataService data;
         private readonly IBookSearchService bookSearch;
         public ObservableCollection<Book> Books { get; private set; }
-        public ObservableCollection<SearchResult> RelaventBooks { get; private set; }
 
         public MainViewModel() : this(new DefaultDataService(), new DefaultBookSearchService())
         { }
@@ -92,46 +91,13 @@ namespace HW9
             {
                 searchResult = value;
                 OnPropertyChanged(nameof(SearchResult));
-                OnPropertyChanged(nameof(RelaventBooks));
             }
         }
 
         private SimpleCommand getGoodreads;
         public SimpleCommand GetGoodreads => getGoodreads ?? (getGoodreads = new SimpleCommand(async () =>
         {
-            SearchResult result = new SearchResult();
-
-            var res = bookSearch.SearchByTitle(UserSearch);
-            var val = res.Result;
-            if (val != null)
-            {
-                RelaventBooks = new ObservableCollection<SearchResult>();
-                foreach (var p in val.Authors)
-                {
-                    result.Author += p.Name + ", ";
-                }
-                result.Title = val.Title;
-                result.Image = val.SmallImageUrl;
-                foreach (var b in val.SimilarBooks)
-                {
-                    SearchResult otherBook = new SearchResult();
-                    foreach (var o in b.Authors)
-                    {
-                        otherBook.Author += o.Name + ", ";
-                    }
-                    otherBook.Title = b.Title;
-                    otherBook.Image = b.SmallImageUrl;
-                    RelaventBooks.Add(otherBook);
-                }
-            }
-            else
-            {
-                RelaventBooks = new ObservableCollection<SearchResult>();
-                result.Title = "Not able to get info";
-                result.Author = "Not Able to get info";
-                result.Image = "Not Able to get info";
-            }
-            SearchResult = result;
+            SearchResult = await bookSearch.SearchByTitle(UserSearch);
         }));
 
 

@@ -1,6 +1,7 @@
 ﻿using Goodreads.Models.Response;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace Interfaces
     public interface IBookSearchService
     {
         //Task<PaginatedList<Work>> Search(string querySearch);
-        Task<Goodreads.Models.Response.Book> SearchByTitle(string querySearch);
+        Task<SearchResult> SearchByTitle(string querySearch);
     }
 
     public class SearchResult
@@ -17,6 +18,7 @@ namespace Interfaces
         public string Title { get; set; }
         public string Author { get; set; }
         public string Image { get; set; }
+        public ObservableCollection<SearchResult> RelatedBooks { get; set; }
     }
 
     //public class ReviewResult

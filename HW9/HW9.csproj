@@ -18,4 +18,9 @@
     <ProjectReference Include="..\Data\Data.csproj" />
     <ProjectReference Include="..\Intefaces\Interfaces.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
 </Project>

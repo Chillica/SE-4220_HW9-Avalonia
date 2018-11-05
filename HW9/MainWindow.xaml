@@ -161,7 +161,7 @@
                     <ListBox Grid.Row="2"
                              Grid.Column="1"
                              Grid.ColumnSpan="2"
-                             Items="{Binding RelaventBooks}"
+                             Items="{Binding SearchResult.RelatedBooks}"
                              Margin="5">
                         <ListBox.DataTemplates>
                             <DataTemplate DataType="interfaces:SearchResult">

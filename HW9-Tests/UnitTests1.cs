@@ -57,26 +57,25 @@ namespace HW9_Tests
             Assert.IsTrue(vm.LoadBookJSON.CanExecute(this));
         }
 
-        //[Test]
-        //[TestCase("Dragon Rider", "Dragon Rider (Dragon Rider, #1)")]
-        //[TestCase(null, "Not able to get info.")]
-        //public void TestBookSearchService(string bookTitle, string expectedTitle)
-        //{
+        [Test]
+        [TestCase("Dragon Rider", "Dragon Rider (Dragon Rider, #1)")]
+        [TestCase(null, "Not able to get info")]
+        public void TestBookSearchService(string bookTitle, string expectedTitle)
+        {
+            SearchResult result = new SearchResult
+            {
+                Title = expectedTitle
+            };
+            bookSvcMock.Setup(m => m.SearchByTitle(bookTitle)).ReturnsAsync(result);
 
-        //    SearchResult result = new SearchResult
-        //    {
-        //        Title = expectedTitle
-        //    };
-        //    bookSvcMock.Setup(m => m.SearchByTitle(bookTitle)).Returns(result);
 
+            var vm = new MainViewModel(dataSvcMock.Object, bookSvcMock.Object)
+            {
+                UserSearch = bookTitle
+            };
+            vm.GetGoodreads.Execute(this);
 
-        //    var vm = new MainViewModel(dataSvcMock.Object, bookSvcMock.Object)
-        //    {
-        //        UserSearch = bookTitle
-        //    };
-        //    vm.GetGoodreads.Execute(this);
-
-        //    vm.SearchResult.Should().Be(expectedTitle);
-        //}
+            vm.SearchResult.Title.Should().Be(expectedTitle);
+        }
     }
 }
